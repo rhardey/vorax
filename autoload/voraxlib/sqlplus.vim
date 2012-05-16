@@ -249,7 +249,7 @@ function! s:sqlplus.Query(statement, ...)"{{{
   let output = self.Exec(a:statement, options)
   if s:log.isTraceEnabled() | call s:log.trace('END s:sqlplus.Query') | endif
   ruby <<EORC
-  resultset = Vorax::TableReader.extract(output)
+  resultset = Vorax::TableReader.extract(VIM::evaluate("output"))
   VIM::command("return #{Vorax::VimUtils.to_vim(resultset)}")
 EORC
 endfunction"}}}

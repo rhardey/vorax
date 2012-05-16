@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-$KCODE = 'u' 
-
 require 'rubygems'
 require 'active_support/multibyte'
 require 'nokogiri'
