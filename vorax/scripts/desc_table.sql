@@ -181,6 +181,21 @@ begin
                          l_item.text);
     l_idx := l_idx + 1;
   end loop;
+
+  -- triggers
+  for r in (	select rpad( trigger_name, 32)||' => '||triggering_event||' '||trigger_type output, rownum rownum#
+					from all_triggers a
+					where a.owner = l_owner
+						and a.table_name = l_table)
+  loop
+	if r.rownum# = 1 then
+      dbms_output.put_line('');
+      dbms_output.put_line('Triggers');
+      dbms_output.put_line('-------------------');
+	end if;
+    dbms_output.put_line('   ' || r.output);
+  end loop;
+
   -- relations
   l_idx := 1;
   for l_item in (select child.table_name as TABL_NAME_2,
@@ -248,5 +263,6 @@ begin
                          rpad(l_item.col_name, 31) || l_item.CONSTRNT_NAME);
     l_idx := l_idx + 1;
   end loop;
+
 end;
 /
