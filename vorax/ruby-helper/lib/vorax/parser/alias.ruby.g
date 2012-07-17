@@ -84,10 +84,12 @@ options {
       elsif col =~ /^[A-Z0-9]+\.\*$/
         # find aliases
         a = sources.find { |als| als.idn == col.split('.')[0] && als.level == level }
-        if a.expr
-          collect_columns(a.object, sources, level+1, columns)
-        else
-          columns << "#{a.object}.*"
+        if a
+          if a.expr
+            collect_columns(a.object, sources, level+1, columns)
+          else
+            columns << "#{a.object}.*"
+          end
         end
       elsif col == '*'
         lvlsrc = sources.find_all { |e| e.level == level }
