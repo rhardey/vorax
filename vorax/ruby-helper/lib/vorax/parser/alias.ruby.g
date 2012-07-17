@@ -64,7 +64,7 @@ options {
     input = ANTLR3::StringStream.new(text.upcase)
     lexer = Alias::Lexer.new(input)
     lexer.cpos = position
-    lexer.map
+    lexer.exhaust
     lexer.aliases
   end
 

@@ -27,7 +27,7 @@ options {
     unless text.empty?
       input = ANTLR3::StringStream.new(text)
       lexer = SqlSplitter::Lexer.new(input)
-      lexer.map
+      lexer.exhaust
       statements = []
       last_pos = 0
       lexer.separators << text.length if lexer.separators == [] || lexer.separators.last < text.length

@@ -5,7 +5,7 @@
 # Generated using ANTLR version: 3.2.1-SNAPSHOT Jul 31, 2010 19:34:52
 # Ruby runtime library version: 1.8.11
 # Input grammar file: sql_splitter.rb.g
-# Generated at: 2011-10-17 09:51:55
+# Generated at: 2012-07-17 11:52:23
 # 
 
 # ~~~> start load path setup
@@ -124,7 +124,7 @@ module SqlSplitter
         unless text.empty?
           input = ANTLR3::StringStream.new(text)
           lexer = SqlSplitter::Lexer.new(input)
-          lexer.map
+          lexer.exhaust
           statements = []
           last_pos = 0
           lexer.separators << text.length if lexer.separators == [] || lexer.separators.last < text.length

@@ -5,7 +5,7 @@
 # Generated using ANTLR version: 3.2.1-SNAPSHOT Jul 31, 2010 19:34:52
 # Ruby runtime library version: 1.8.11
 # Input grammar file: alias.ruby.g
-# Generated at: 2011-10-17 09:47:29
+# Generated at: 2012-07-17 11:52:17
 # 
 
 # ~~~> start load path setup
@@ -175,7 +175,7 @@ module Alias
         input = ANTLR3::StringStream.new(text.upcase)
         lexer = Alias::Lexer.new(input)
         lexer.cpos = position
-        lexer.map
+        lexer.exhaust
         lexer.aliases
       end
 

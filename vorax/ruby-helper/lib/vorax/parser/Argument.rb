@@ -5,7 +5,7 @@
 # Generated using ANTLR version: 3.2.1-SNAPSHOT Jul 31, 2010 19:34:52
 # Ruby runtime library version: 1.8.11
 # Input grammar file: argument.ruby.g
-# Generated at: 2011-10-17 09:51:25
+# Generated at: 2012-07-17 11:52:15
 # 
 
 # ~~~> start load path setup
@@ -129,7 +129,7 @@ module Argument
       def self.arguments_for(stmt, cpos)
         input = ANTLR3::StringStream.new(stmt.upcase)
         lexer = Argument::Lexer.new(input)
-        lexer.map
+        lexer.exhaust
         lexer.pmodules.each do |m|
           m[:args].each do |a|
             if a.pos.include?(cpos) && a.expr.nil?

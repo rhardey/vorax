@@ -22,7 +22,7 @@ options {
   def self.arguments_for(stmt, cpos)
     input = ANTLR3::StringStream.new(stmt.upcase)
     lexer = Argument::Lexer.new(input)
-    lexer.map
+    lexer.exhaust
     lexer.pmodules.each do |m|
       m[:args].each do |a|
         if a.pos.include?(cpos) && a.expr.nil?
