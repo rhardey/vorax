@@ -40,15 +40,17 @@ module Vorax
     def destroy
       Process.kill(9, @pid)
       # confirm that the process was really killed
-      begin
-        (DESTROY_TIMEOUT*10).times do 
-          read(1)
-          sleep 0.1
+      if RUBY_VERSION == /^1.8/
+        begin
+          (DESTROY_TIMEOUT*10).times do 
+            read(1)
+            sleep 0.1
+          end
+          raise "Timeout while trying to kill the sqlplus process."
+        rescue PTY::ChildExited => msg  
+          # the process has been destoryed
+          @pid = nil
         end
-        raise "Timeout while trying to kill the sqlplus process."
-      rescue PTY::ChildExited => msg  
-        # the process has been destoryed
-        @pid = nil
       end
     end
 
