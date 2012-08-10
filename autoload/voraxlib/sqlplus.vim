@@ -306,7 +306,7 @@ function! s:sqlplus.EnforceColumnsHeading(statements)"{{{
           \ "end; " .  
           \ "\n/\n", options) 
     ruby <<EORC
-    resultset = Vorax::TableReader.extract(output)
+    resultset = Vorax::TableReader.extract(VIM::evaluate('output'))
     VIM::command("let head_columns = #{Vorax::VimUtils.to_vim(resultset)}")
 EORC
     let all_columns += head_columns.resultset
