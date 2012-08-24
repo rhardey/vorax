@@ -177,28 +177,30 @@ function! s:ExtendExplorer()"{{{
     if s:log.isTraceEnabled() | call s:log.trace('BEGIN s:explorer.DescribePath(' . string(a:path) . ')') | endif
     let desc = {'owner' : '', 'type' : '', 'object' : ''}
     let parts = split(a:path, voraxlib#utils#LiteralRegexp(self.path_separator))
-    let index = 1
-    if parts[1] == '[Users]'
-      let index = 3
-      if exists('parts[2]')
-        let desc.owner = substitute(parts[2], '\v(^\[)|(\]$)', '', 'g')
+    if len(parts) > 1
+      let index = 1
+      if parts[1] == '[Users]'
+        let index = 3
+        if exists('parts[2]')
+          let desc.owner = substitute(parts[2], '\v(^\[)|(\]$)', '', 'g')
+        endif
       endif
-    endif
-    if desc.owner == ''
-      let result = vorax#GetSqlplusHandler().Query('select sys_context(''USERENV'', ''SESSION_USER'') crr_user from dual;')
-      if s:log.isDebugEnabled() | call s:log.debug('current user: ' . string(result)) | endif
-      if empty(result.errors)
-        let desc.owner = get(get(result.resultset, 0), 'CRR_USER')
-      else
-        if s:log.isErrorEnabled() | call s:log.error(string(result.errors)) | endif
-        call voraxlib#utils#Warn("WTF? What's with this error?\n" . join(result.errors, "\n"))
+      if desc.owner == ''
+        let result = vorax#GetSqlplusHandler().Query('select sys_context(''USERENV'', ''SESSION_USER'') crr_user from dual;')
+        if s:log.isDebugEnabled() | call s:log.debug('current user: ' . string(result)) | endif
+        if empty(result.errors)
+          let desc.owner = get(get(result.resultset, 0), 'CRR_USER')
+        else
+          if s:log.isErrorEnabled() | call s:log.error(string(result.errors)) | endif
+          call voraxlib#utils#Warn("WTF? What's with this error?\n" . join(result.errors, "\n"))
+        endif
       endif
+      if len(parts) > index
+        " fill the desc dictionary only if the path is long enough
+        let desc.type = s:ToOracleType(parts[index])
+        let desc.object = substitute(get(parts, index + 1, ''),  '\v(^\[)|(\]$|(!$))', '', 'g')
+      end
     endif
-    if len(parts) > index
-      " fill the desc dictionary only if the path is long enough
-      let desc.type = s:ToOracleType(parts[index])
-      let desc.object = substitute(get(parts, index + 1, ''),  '\v(^\[)|(\]$|(!$))', '', 'g')
-    end
     if s:log.isTraceEnabled() | call s:log.trace('END s:explorer.DescribePath => ' . string(desc)) | endif
     return desc
   endfunction"}}}
