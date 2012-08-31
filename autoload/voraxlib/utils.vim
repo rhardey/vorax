@@ -151,7 +151,9 @@ function! voraxlib#utils#SelectCurrentStatement()"{{{
   let tail = end_c - start_c
   let lines = end_l - start_l
   if s:log.isDebugEnabled() | call s:log.debug('[start_l, start_c, end_l, end_c] = [' . start_l . ', ' . start_c . ', ' . end_l . ', ' . end_c . ']') | endif
-  call voraxlib#utils#SelectRange(start_l, start_c, end_l, end_c)
+  if (lines == 0 && tail >= 0) || (lines > 0)
+    call voraxlib#utils#SelectRange(start_l, start_c, end_l, end_c)
+  endif
 endfunction"}}}
 
 " Get the current statement under cursor
@@ -250,6 +252,19 @@ function! voraxlib#utils#GetStartOfCurrentSql(move)"{{{
   else
   	let [l, c] = [1, 1]
   endif
+  " skip comments
+  call setpos('.', [bufnr('%'), l, c, 0])
+  while 1
+    if expand('<cWORD>') != '' && (synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), "name") != 'Comment')
+      break
+    else
+      normal! w
+    endif
+    if line('.') == line('$') && col('.') == col('$') - 1
+      break
+    endif
+  endwhile
+  let [l, c] = [line('.'), col('.')]
   if !a:move
     " if not move requested then restore state
     call winrestview(state)
@@ -288,6 +303,19 @@ function! voraxlib#utils#GetEndOfCurrentSql(move)"{{{
   if [l, c] == [0, 0]
   	let [l, c] = [line('$'), len(getline('$'))]
   endif
+  " skip comments
+  call setpos('.', [bufnr('%'), l, c, 0])
+  while 1
+    if expand('<cWORD>') != '' && (synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), "name") != 'Comment')
+      break
+    else
+      normal! ge
+    endif
+    if line('.') == 1 && col('.') == 1
+      break
+    endif
+  endwhile
+  let [l, c] = [line('.'), col('.')]
   if !a:move
     " if not move requested then restore state
     call winrestview(state)
@@ -434,13 +462,14 @@ endfunction"}}}
 function! voraxlib#utils#AddSqlDelimitator(statement)"{{{
   if s:log.isTraceEnabled() | call s:log.trace('BEGIN voraxlib#utils#AddSqlDelimitator()') | endif
   let end_delimitator = voraxlib#utils#GetSqlDelimitator(a:statement)
+  if s:log.isDebugEnabled() | call s:log.debug('end_delimitator='.end_delimitator) | endif
   " add the delimitator on the same line. This is needed because VoraX
   " doesn't know if it's an sqlplus command or an SQL command. For
   " example: 'SET AUTOTRACE ON;' is not the same as 'SET AUTOTRACE ON\n;'.
   " The second is dangerous because it excutes also the previous SQL
   " command. Likewise, take care about the trailing comment. Something
   " like 'SELECT * FROM CAT -- my comment;' is useless.
-  return substitute(voraxlib#utils#RTrimSqlComments(a:statement), '\_s*$', '', '') . end_delimitator
+  return substitute(a:statement, '\_s*$', '', '') . end_delimitator
 endfunction"}}}
 
 " Whenever or not the provided statement is an oracle query.
