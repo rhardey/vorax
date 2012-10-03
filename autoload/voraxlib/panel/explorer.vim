@@ -229,7 +229,7 @@ endfunction"}}}
 " Get the list of users.
 function! s:GetUsers()"{{{
   let sqlplus = vorax#GetSqlplusHandler()
-  let output = sqlplus.Query('select username from all_users where username != sys_context(''USERENV'', ''SESSION_USER'') order by 1;',
+  let output = sqlplus.Query('select * from (select username from all_users where username != sys_context(''USERENV'', ''SESSION_USER'') union select ''PUBLIC'' from dual) order by 1;',
         \ {'executing_msg' : 'Get users...',
         \  'throbber' : vorax#GetDefaultThrobber(),
         \  'done_msg' : 'Done.'})
