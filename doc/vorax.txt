@@ -129,7 +129,7 @@ However, you need to take care of some dependencies VoraX relies on:
       :echo has('patch501')
 
    2. Your Vim must have ruby support enabled. In order to check this you may 
-      execute :version and look for +ruby. The supported Ruby is 1.8.7. To 
+      execute :version and look for +ruby. The supported Ruby is 1.9.X. To 
       check this you may run the following command within your Vim editor:
       
       :ruby puts RUBY_VERSION
