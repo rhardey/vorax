@@ -123,7 +123,10 @@ plugins if you want. It's completely up to you!
 
 However, you need to take care of some dependencies VoraX relies on: 
 
-   1. Vim 7.3 or above is required.
+   1. Vim 7.3 or above is required. The 501 patch is mandatory. You may check to
+      see if you have this patch using:
+
+      :echo has('patch501')
 
    2. Your Vim must have ruby support enabled. In order to check this you may 
       execute :version and look for +ruby. The supported Ruby is 1.8.7. To 
@@ -134,7 +137,7 @@ However, you need to take care of some dependencies VoraX relies on:
       CREAM configurations are not supported therefore a plain Vim should be 
       used.
 
-   3. Ruby 1.8.7
+   3. Ruby 1.9.X
 
    4. Rubygems. On Debian systems is as simple as: 
    
@@ -154,7 +157,7 @@ However, you need to take care of some dependencies VoraX relies on:
       connections then the openssl ruby extension must be available. 
       On Ubuntu/Debian systems you may use the following command to install it: 
       
-      sudo apt-get install libopenssl-ruby1.8 
+      sudo apt-get install libopenssl-ruby1.9 
 
 In addition the following Vim script must be also installed:
 
