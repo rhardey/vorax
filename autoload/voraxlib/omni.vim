@@ -239,9 +239,10 @@ function! s:ComputeCompletionContext()"{{{
   let context.relpos = voraxlib#utils#GetRelativePosition(start_l, start_c)
   " the leading part of the statement
   let context.head = strpart(context.statement, 0, context.relpos)
-  " from where to replace with the selected omni item
+  " from where to replace with he selected omni item
   let context.complete_from = -1
   let context.module = s:ArgumentSpotBelongsTo(context.head, context.relpos)
+  if s:log.isDebugEnabled() | call s:log.debug('module=' . context.module) | endif
   if context.module != ''
     " parameters completion
     let context.type = 'args'
