@@ -322,6 +322,7 @@ function! voraxlib#utils#GetEndOfCurrentSql(move)"{{{
       break
     endif
   endwhile
+  normal! h
   let [l, c] = [line('.'), col('.')]
   if !a:move
     " if not move requested then restore state
