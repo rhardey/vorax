@@ -140,7 +140,7 @@ function! s:ExtendProfiles()"{{{
   " What to do when a profile node is clicked.
   function! s:profiles.OnLeafClick(path)"{{{
     let profile_name = self.GetProfileNameFromPath(a:path) 
-    call vorax#Connect(self.GetConnectionString(profile_name), '!')
+    call vorax#Connect(profile_name, '!')
   endfunction"}}}
 
   " Convert a profile into its string representation. This is used to actually
@@ -473,17 +473,17 @@ endfunction"}}}
 
 " Ask the user for the current master password.
 function! s:AskForMasterPassword()"{{{
-  let valid = 0
   if s:profiles.IsSecureRepositoryInitialized()
-    while !valid
-      let master_password = inputsecret('Master password: ')
-      if s:profiles.OpenMasterRepository(master_password)
-        break
-      else
-        call voraxlib#utils#Warn("Wrong password!\n")
-      endif
-    endwhile
-    return 1
+    let master_password = inputsecret('Master password: ')
+    if master_password == ''
+      return 0
+    endif
+    if s:profiles.OpenMasterRepository(master_password)
+      return 1
+    else
+      call voraxlib#utils#Warn("\nWrong password! Fallback to database user password...\n")
+      return 0
+    endif
   else
     call voraxlib#utils#Warn('Cannot access the secure repository!\n')
     return 0
