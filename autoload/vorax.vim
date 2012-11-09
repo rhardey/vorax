@@ -45,7 +45,12 @@ function! vorax#Connect(cstr, bang)"{{{
   if sqlplus.GetPid()
     " set the session owner monitor policy
     call sqlplus.SetSessionOwnerMonitor(g:vorax_session_owner_monitor)
-    let cstr = voraxlib#connection#Ask(a:cstr)
+    if (a:cstr =~ '^\s*/\s*$') || (a:cstr =~ '^\s*/@.*$') || (a:cstr =~ '^\s*/\s\+[Aa][Ss]\s\+.*$')
+      " do nothing: assume OS auth
+      let cstr = a:cstr
+    else
+      let cstr = voraxlib#connection#Ask(a:cstr)
+    endif
     if cstr != ''
       let output = sqlplus.GetBanner() . "\n\n"
       let conn_output = sqlplus.Exec("connect " . cstr, 

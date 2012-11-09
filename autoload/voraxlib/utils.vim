@@ -316,13 +316,13 @@ function! voraxlib#utils#GetEndOfCurrentSql(move)"{{{
     endif
   endwhile
   " preserve whitespaces (for completion)
-  while 1
-    normal! l
-    if (getline(".")[col(".") - 1] != " ") || (line('.') == line('$') && col('.') == col('$') - 1)
-      break
-    endif
-  endwhile
-  normal! h
+  "while 1
+    "normal! l
+    "if (getline(".")[col(".") - 1] != " ") || (line('.') == line('$') && col('.') == col('$') - 1)
+      "break
+    "endif
+  "endwhile
+  "normal! h
   let [l, c] = [line('.'), col('.')]
   if !a:move
     " if not move requested then restore state
