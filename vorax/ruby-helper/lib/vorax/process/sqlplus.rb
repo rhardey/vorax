@@ -314,10 +314,12 @@ module Vorax
       file_content = cmds.join("\n")
       #file_content << "\n#prompt #{END_OF_REQUEST}\n.\n" if include_eor
       filename = DEFAULT_PACK_FILE if filename.nil?
-      File.open(@process.convert_path("#@tmp_dir/#{filename}"), 'w') {|f| f.write(file_content) }
+      File.open(@process.convert_path("#@tmp_dir/#{filename}"), 'w') do |f| 
+        f.write(file_content)
+        f.write "\n" + '#prompt' + " #{END_OF_REQUEST}\n.\n" if include_eor
+      end
       file = @process.convert_path("#@tmp_dir/#{filename}")
       ret_val = "@#{file}"
-      ret_val += "\n" + '#prompt' + " #{END_OF_REQUEST}\n.\n" if include_eor
       return ret_val
     end
 
