@@ -455,7 +455,7 @@ function! s:sqlplus.Cancel(message) dict"{{{
   begin
     start = Time.now
     $sqlplus_factory[VIM::evaluate('self.ruby_key')].cancel do
-      elapsed = ((Time.now - start).to_i % 60).to_s + 's of 30s elapsed...'
+      elapsed = ((Time.now - start).to_i % 60).to_s + 's of 5s elapsed...'
       VIM::command('redraw | echon ' + (VIM::evaluate('a:message') + ' - ' + elapsed).inspect)
     end
     VIM::command('return 1')

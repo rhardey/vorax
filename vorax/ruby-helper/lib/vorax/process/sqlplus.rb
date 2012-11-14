@@ -288,7 +288,7 @@ module Vorax
           # just wait a little bit
           sleep READ_SLEEP_TICK
         end
-        if ((Time.now - start).to_i % 60) > 30
+        if ((Time.now - start).to_i % 60) > 5
           raise TimeoutException
         end
       end
