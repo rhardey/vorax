@@ -432,9 +432,11 @@ endfunction"}}}
 " plsql modules, including types.
 function! voraxlib#utils#IsSlashRequiredAsEnd(statement)"{{{
   " check for a type
-  if a:statement !~ '\v\n\s*/\s*\n*$'
-    let pattern = '^\_s*create\_s\+\(or\_s\+replace\_s\+\)\?type\_s\+'
-    return a:statement =~? pattern || a:statement =~? s:plsql_end_marker
+  if a:statement =~? '\v^\s*(create|begin|declare)\s+'
+    if a:statement !~ '\v\n\s*/\s*\n*$'
+      let pattern = '^\_s*create\_s\+\(or\_s\+replace\_s\+\)\?type\_s\+'
+      return a:statement =~? pattern || a:statement =~? s:plsql_end_marker
+    endif
   endif
   return 0
 endfunction"}}}
