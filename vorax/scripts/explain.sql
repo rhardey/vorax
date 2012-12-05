@@ -6,8 +6,6 @@
 -- to be explained. All current sqlplus options are saved before
 -- and restore after, therefore you may set whatever sqlplus
 -- option you want.
---
--- The &2 parameter is the options to be used by DBMS_XPLAN.
 
 -- by default, don't show the query results for the statement.
 set termout off
@@ -17,20 +15,15 @@ alter session set statistics_level='ALL';
 
 -- serveroutput must be off in order DBMS_XPLAN to work as
 -- expected.
-set serveroutput off
+set serveroutput on
 
--- execute the statement
-@&1
 
 -- enable terminal display
 set termout on
 
--- set options so that the plan to look nice
-set linesize 200
-set pagesize 9999
-set heading off
-set feedback off
+-- execute the statement
+@&1
 
--- show the plan for the last sql
-select * from table(dbms_xplan.display_cursor(null, null, '&2'));
+prompt
+
 

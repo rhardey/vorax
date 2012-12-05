@@ -218,7 +218,11 @@ function! vorax#Explain(sql, only)"{{{
     " assume the current statement
     let statement = voraxlib#utils#GetCurrentStatement()
   endif
-  let statement = voraxlib#utils#AddSqlDelimitator(statement)
+  if a:only
+    let statement = voraxlib#utils#AddSqlDelimitator(statement)
+  else
+    let statement = voraxlib#utils#RemoveSqlDelimitator(statement)
+  endif
   let sqlplus = vorax#GetSqlplusHandler()
   let outputwin = vorax#GetOutputWindowHandler()
   if sqlplus.html && outputwin.buffer.vertical 
@@ -234,6 +238,23 @@ function! vorax#Explain(sql, only)"{{{
   endif
   call sqlplus.SaveState()
   let crr_win = winnr()
+  if !a:only
+    let statement = "var crr_plan clob;\n" .
+          \ "exec :crr_plan := empty_clob();\n" .
+          \ "begin\n" .
+          \ "for x in (\n" .
+          \ statement .
+          \ "\n) loop\n" .
+          \ "null;\n" .
+          \ "end loop;\n" .
+          \ "for x in (select * from table(dbms_xplan.display_cursor(null, null, '" .
+          \ g:vorax_explain_options .
+          \ "'))) loop\n" .
+          \ "dbms_output.put_line(x.plan_table_output);\n" .
+          \ "end loop;\n" .
+          \ "end;\n" .
+          \ "/" . "\n"
+  endif
   let sql_file = substitute(sqlplus.Pack(statement, {'target_file' : 'stmt_to_be_explained.sql'}), '^@', '', '')
   if a:only
     let explain_script = fnamemodify(s:script_dir . '/../vorax/scripts/explain_only.sql', ':p:8')
