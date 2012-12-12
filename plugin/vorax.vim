@@ -574,6 +574,7 @@ endif"}}}
 " ==============================================================================
 " g:vorax_exec_key"{{{
 TLet g:vorax_exec_key = "<Leader>e"
+exe "nmap <unique> " . (g:vorax_force_keymappings ? "" : "<unique> ") . g:vorax_exec_key . " <Plug>VoraxExecCurrent"
 "}}}
 " g:vorax_describe_key"{{{
 TLet g:vorax_describe_key = "<Leader>d"
